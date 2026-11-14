@@ -1,33 +1,47 @@
+
 # ESP32 Keypad and LCD Interface — Documentation
 
-Original diagrams and laboratory photographs from **Week 7, Figures 6–9**, of the Electrical and Electronic Engineering laboratory report.
+This folder contains the original keypad input flowchart, circuit schematic, breadboard photograph and stripboard construction evidence from the ESP32 Keypad and LCD Interface laboratory project.
 
 ## 1. Keypad Input Flowchart
 
-<img src="keypad-input-flowchart.png" width="500" alt="Original keypad input and LCD feedback flowchart">
+<img src="keypad-input-flowchart.png" width="500" alt="ESP32 keypad input and LCD feedback flowchart">
 
-Figure 6: The program waits for a keypress, displays and stores ordinary keys, and displays the stored input when `#` is pressed before resetting the input string.
+Original flowchart illustrating keypad input detection, character storage, LCD feedback and the input-confirmation process.
 
-## 2. Keypad and LCD Schematic
+The `#` key is used to confirm the stored input before the program clears the string for a new entry.
 
-<img src="keypad-lcd-schematic.png" width="500" alt="Original ESP32 keypad and LCD wiring schematic">
+## 2. Keypad and LCD Circuit Schematic
 
-Figure 7: The original report schematic of the ESP32, 4×3 keypad and 16×2 LCD. The report specifies LCD GPIOs 4, 5, 18, 19, 21 and 23, with keypad rows 13, 12, 14 and 27 and columns 26, 25 and 33. See the Arduino sketch for the exact pin order.
+<img src="keypad-lcd-schematic.png" width="500" alt="ESP32 keypad and LCD circuit schematic">
 
-## 3. Breadboard Implementation
+Original Fritzing schematic showing the ESP32 connections to the 4×3 matrix keypad and 16×2 LCD.
 
-<img src="keypad-lcd-breadboard.jpg" width="500" alt="Original keypad and LCD breadboard assembly photograph">
+The LCD uses a 4-bit parallel interface, while the keypad connects through four row pins and three column pins.
 
-Figure 8: Photograph of the laboratory breadboard prototype, including the ESP32, LCD and connecting wires.
+## 3. Keypad and LCD — Breadboard Construction
 
-## 4. Stripboard Implementation
+<img src="keypad-lcd-breadboard.jpg" width="500" alt="ESP32 keypad and LCD assembled on a breadboard">
 
-<img src="keypad-lcd-stripboard.jpg" width="500" alt="Original keypad and LCD stripboard assembly photograph">
+Original laboratory photograph showing the keypad and LCD interface assembled on a breadboard.
 
-Figure 9: Photograph of the assembled stripboard with the ESP32, keypad and LCD.
+The breadboard prototype was used to test keypad input detection and LCD display functionality before further hardware construction.
+
+## 4. Keypad and LCD — Stripboard Construction
+
+<img src="keypad-lcd-stripboard.jpg" width="500" alt="ESP32 keypad and LCD stripboard assembly">
+
+Original laboratory photograph showing the keypad and LCD interface assembled on stripboard.
+
+The interface was successfully tested initially, although later hardware connection problems prevented integration into the complete maze-navigation system.
 
 ## Notes
 
-These images document the **tested keypad/LCD interface**. The later maze-navigation command system was not successfully completed and is not represented as operational here.
+- All diagrams and photographs document the original university laboratory work.
+- The system uses an ESP32 microcontroller with a 4×3 matrix keypad and 16×2 LCD.
+- The keypad processes individual character inputs and stores them in a string.
+- The LCD displays keypad input and the stored sequence when the `#` key is pressed.
+- The completed input is also sent to the Arduino Serial Monitor.
+- The later command-based maze-navigation system was not successfully completed and is not presented as an operational feature.
 
-Return to the [main README](../README.md) for project details and source code.
+For the full project description, pin configurations and Arduino sketch, return to the [main README](../README.md).
