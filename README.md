@@ -9,7 +9,31 @@ Developed as part of an Electrical and Electronic Engineering laboratory project
 
 ## Demo / Images
 
-Original circuit diagrams, laboratory photographs and flowcharts will be available in the [Project Documentation](docs/README.md).
+### Keypad and LCD Circuit Schematic
+
+<img src="docs/keypad-lcd-schematic.png" width="500" alt="ESP32 keypad and LCD circuit schematic">
+
+Original Fritzing schematic showing the ESP32 connections to the matrix keypad and 16×2 LCD.
+
+### Keypad Input Flowchart
+
+<img src="docs/keypad-input-flowchart.png" width="500" alt="Keypad input handling flowchart">
+
+Original laboratory flowchart illustrating keypad input detection, character storage, LCD feedback and confirmation.
+
+### Breadboard Prototype
+
+<img src="docs/keypad-lcd-breadboard.jpg" width="500" alt="ESP32 keypad and LCD breadboard prototype">
+
+Photograph of the initial keypad and LCD circuit assembled on a breadboard.
+
+### Stripboard Construction
+
+<img src="docs/keypad-lcd-stripboard.jpg" width="500" alt="ESP32 keypad and LCD stripboard construction">
+
+Photograph showing the physical implementation of the keypad and LCD interface on stripboard.
+
+Additional images and descriptions are available in the [Project Documentation](docs/README.md).
 
 ## Hardware
 
@@ -23,56 +47,88 @@ Original circuit diagrams, laboratory photographs and flowcharts will be availab
 - Power supply
 - USB cable for programming
 
+## Pin Configuration
+
+### LCD Connections
+
+| LCD Signal | ESP32 GPIO |
+|---|---|
+| RS | GPIO4 |
+| Enable | GPIO5 |
+| D4 | GPIO18 |
+| D5 | GPIO19 |
+| D6 | GPIO21 |
+| D7 | GPIO23 |
+
+The LCD uses a 4-bit parallel interface to reduce the number of microcontroller pins required.
+
+### Keypad Connections
+
+| Keypad Connection | ESP32 GPIO |
+|---|---|
+| Row 1 | GPIO13 |
+| Row 2 | GPIO12 |
+| Row 3 | GPIO14 |
+| Row 4 | GPIO27 |
+| Column 1 | GPIO26 |
+| Column 2 | GPIO25 |
+| Column 3 | GPIO33 |
+
+These pin assignments are taken from the keypad and LCD implementation documented in the laboratory report.
+
+**Hardware note:** GPIO12 is a boot-strapping pin on the original ESP32, so external circuitry must not interfere with its required startup state.
+
 ## How It Works
 
-The ESP32 reads inputs from a matrix keypad and processes the characters entered by the user.
+The ESP32 reads input from a 4×3 matrix keypad and processes the entered characters.
 
-The LCD provides a visual interface, displaying keypad inputs.
-
-Characters can also be stored in a string until the user confirms the input.
+The LCD displays feedback, while a string variable stores the sequence of inputs until the user presses the confirmation key.
 
 ### 1. Matrix Keypad Input
 
-A 4×3 matrix keypad contains 12 keys arranged in four rows and three columns.
+The keypad contains 12 keys arranged in four rows and three columns.
 
-The keypad is connected to the ESP32 through its row and column connections.
+The ESP32 detects keypresses through the row and column connections using the Keypad library.
 
-The program detects which key has been pressed and processes the corresponding character.
+Each detected key is processed by the Arduino program.
 
 ### 2. LCD Display
 
-A 16×2 character LCD displays text across two rows, with up to 16 characters per row.
+The 16×2 LCD displays up to 16 characters on each of its two rows.
 
-The ESP32 sends display commands and character data to the LCD.
+The LiquidCrystal library is used to control the display through the ESP32's digital GPIO connections.
 
-This allows the user to see the keypad inputs while interacting with the system.
+When a key is pressed, the LCD updates to show the entered character.
 
 ### 3. Character Storage
 
-The program stores keypad inputs as a sequence of characters.
+Each keypad character is added to a string variable.
 
-This allows multiple keypresses to form a complete input rather than processing each character independently.
+This allows the program to retain a sequence of user inputs until confirmation.
 
 ### 4. Input Confirmation
 
-The `#` key is used to confirm the entered sequence.
+The `#` key acts as the confirmation button.
 
-When the user presses `#`, the program processes the stored input, outputs the completed sequence to the Serial Monitor and clears the stored characters.
+When pressed, the program:
 
-The system can then accept a new sequence.
+1. Outputs the stored sequence to the Serial Monitor.
+2. Displays the stored input on the LCD.
+3. Clears the stored string.
+4. Continues accepting new keypad inputs.
 
 ## System Operation
 
-The interface follows a simple input-processing sequence:
+The interface follows this sequence:
 
-1. Initialise the ESP32, keypad and LCD.
-2. Wait for a keypad input.
-3. Detect the pressed key.
-4. Display the input on the LCD.
-5. Store the entered character.
-6. Check whether the confirmation key has been pressed.
-7. If `#` is pressed, submit the stored input.
-8. Clear the stored input and continue accepting new characters.
+1. Initialise the ESP32 and LCD.
+2. Initialise the matrix keypad.
+3. Wait for a keypress.
+4. Detect the pressed character.
+5. If the key is not `#`, store and display it.
+6. If the key is `#`, display and submit the stored input.
+7. Clear the stored sequence.
+8. Repeat the process.
 
 ## Software
 
@@ -81,44 +137,46 @@ The interface follows a simple input-processing sequence:
 - Arduino IDE
 - Arduino C++
 - ESP32 board support package
-- Keypad interface library
-- LCD control library
-
-The exact libraries and GPIO assignments are documented in the original laboratory code.
+- Keypad library (`Keypad.h`)
+- LiquidCrystal library (`LiquidCrystal.h`)
 
 ### Project Files
 
 | File | Description |
 |---|---|
 | `keypad-lcd-interface.ino` | Arduino code for keypad input, LCD output and input confirmation |
-| `docs/README.md` | Original laboratory diagrams, photographs and testing evidence |
+| `docs/README.md` | Original schematic, flowchart, photographs and laboratory documentation |
+
+The Arduino sketch is based on the successfully tested keypad and LCD interface from Week 7 of the laboratory report.
 
 ## Build & Test
 
 ### 1. Hardware Assembly
 
-1. Connect the matrix keypad to the ESP32.
-2. Connect the LCD according to the laboratory circuit diagram.
-3. Verify the power and ground connections.
-4. Check the row, column and LCD connections before applying power.
+1. Connect the keypad rows to GPIO13, GPIO12, GPIO14 and GPIO27.
+2. Connect the keypad columns to GPIO26, GPIO25 and GPIO33.
+3. Connect the LCD control pins to GPIO4 and GPIO5.
+4. Connect the LCD data pins to GPIO18, GPIO19, GPIO21 and GPIO23.
+5. Connect the LCD power, ground and contrast circuitry according to the original schematic.
+6. Verify all connections before applying power.
 
 ### 2. Programming
 
-1. Open the project in Arduino IDE.
-2. Install the required keypad and LCD libraries.
-3. Select the correct ESP32 board and communication port.
-4. Upload the Arduino sketch.
-5. Open the Serial Monitor where required.
+1. Open `keypad-lcd-interface.ino` in Arduino IDE.
+2. Install the Keypad and LiquidCrystal libraries if required.
+3. Select the correct ESP32 board and serial port.
+4. Upload the sketch.
+5. Open the Serial Monitor at 115200 baud.
 
 ### 3. Testing
 
-1. Press individual keypad buttons.
-2. Verify that the ESP32 detects the correct characters.
-3. Confirm that the LCD displays the inputs.
-4. Enter multiple characters to test input storage.
-5. Press `#` to confirm the entered sequence.
-6. Check the output in the Serial Monitor.
-7. Confirm that the stored input is cleared for the next sequence.
+1. Press an individual keypad key.
+2. Confirm that the correct character appears on the LCD.
+3. Enter multiple characters.
+4. Press `#` to confirm the stored input.
+5. Check the completed sequence on the LCD.
+6. Confirm that the sequence is printed to the Serial Monitor.
+7. Enter another sequence to verify that the stored input was cleared.
 
 ## Results / Notes
 
@@ -126,42 +184,48 @@ The exact libraries and GPIO assignments are documented in the original laborato
 
 The laboratory project demonstrated:
 
-- Successful keypad input detection.
-- Character display using a 16×2 LCD.
-- Storage of multiple keypad inputs.
-- Confirmation of a stored input sequence.
-- Serial Monitor output for testing.
+- Successful detection of keypad inputs.
+- Character display on a 16×2 LCD.
+- Storage of multiple keypad characters.
+- Input confirmation using the `#` key.
+- Serial Monitor output for verification.
 - Breadboard and stripboard construction.
 
-The keypad and LCD interface was successfully tested during the laboratory work.
+The keypad and LCD system was successfully demonstrated during initial laboratory testing.
+
+### Observations
+
+The Keypad library successfully detected user inputs, and the LiquidCrystal library provided real-time display feedback.
+
+The input-storage and confirmation logic allowed users to enter and submit complete character sequences.
 
 ### Limitations
 
-The interface was developed as part of a larger robotics laboratory project.
+The interface was originally developed as part of a larger command-based robot navigation project.
 
-Although keypad-based robot navigation commands were explored, the complete command-driven maze-navigation system was not successfully implemented.
+Although the standalone keypad and LCD functionality worked successfully during initial testing, hardware problems later prevented its integration into the complete maze-navigation system.
 
-This repository therefore focuses on the completed keypad and LCD interface rather than presenting the unfinished navigation functionality as operational.
+The complete command-based robot navigation system was therefore not successfully implemented.
 
 ### Future Improvements
 
 - Add input validation.
 - Implement a clear or delete function.
-- Improve handling of long character sequences.
-- Develop a structured menu interface.
-- Use a finite-state machine for different operating modes.
-- Integrate validated keypad commands into a complete robot-control system.
+- Improve long-string handling on the 16×2 LCD.
+- Develop a structured menu system.
+- Implement a finite-state machine for command processing.
+- Rebuild and verify the hardware connections before integrating the interface into a robot.
 
 ## What I Learned
 
-- How matrix keypads are interfaced with microcontrollers.
-- How digital inputs are processed using Arduino C++.
-- How character LCDs display information.
-- How to store and manage user input.
+- How to interface a matrix keypad with an ESP32 microcontroller.
+- How to process digital keypad inputs using Arduino C++.
+- How to control a character LCD using a 4-bit parallel interface.
+- How to store and manipulate user input strings.
 - How to implement confirmation logic.
-- How to use the Serial Monitor for debugging.
-- How to construct and test input/output circuits on breadboard and stripboard.
-- How user interfaces can be integrated into embedded systems.
+- How to use the Serial Monitor for testing and debugging.
+- How to construct circuits on breadboard and stripboard.
+- Why hardware reliability matters when integrating embedded subsystems.
 
 ## Related Projects
 
